@@ -18,5 +18,5 @@ const reportSchema = new mongoose.Schema({
     timestamps: true
 });
 
-const Report = mongoose.model('doctor', reportSchema);
+const Report = mongoose.model('report', reportSchema);
 module.exports = Report;

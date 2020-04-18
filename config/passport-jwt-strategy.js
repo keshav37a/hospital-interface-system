@@ -17,7 +17,7 @@ passport.use(new JWTStrategy(opts, function(jwtPayload, done){
         if(err){console.log(`Error in finding doctor: during passport-jwt-auth: ${err}`)}
 
         if(doctor){
-            console.log(`Doctor authorised: during passport-jwt-auth: ${err}`)
+            console.log(`Doctor authorised: during passport-jwt-auth`)
             return done(null, doctor);
         }
         else{
