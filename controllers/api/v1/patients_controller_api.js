@@ -5,7 +5,6 @@ const enums = require('../../../config/statusEnums');
 
 //Register a patient
 module.exports.register = async function(req, res){
-    console.log('patients_controller.register called');
 
     if(req.body.phone==undefined){
         return res.status(206).json({
@@ -107,7 +106,6 @@ module.exports.createReport = async function(req, res){
 
 //Get all reports of a patient 
 module.exports.allReports = async function(req, res){
-    console.log('patients_controller.getReports called');
     let patientId = req.params.id;
 
     try{
@@ -151,9 +149,7 @@ module.exports.allReports = async function(req, res){
 
 //Get reports by status
 module.exports.getReportsByStatus = async function(req, res){
-    console.log('patients_controller.getReportsByStatus called');
     let prm = req.params.status;
-    console.log(prm);
     let status = enums[prm];
 
     if(status==undefined){
@@ -162,14 +158,12 @@ module.exports.getReportsByStatus = async function(req, res){
         });
     }
 
-    console.log('status', status);
     try{
         let reportsByStatus = await Report.find({status: status}).populate('patient doctor');
 
         if(reportsByStatus){
             let reports = [];
             reportsByStatus.forEach(element=>{
-                console.log(element);
                 let obj = {};
                 obj.patient = element.patient.name;
                 obj.doctor = element.doctor.name;

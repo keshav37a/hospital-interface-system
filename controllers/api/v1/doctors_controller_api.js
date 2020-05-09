@@ -17,7 +17,6 @@ module.exports.register = async function(req, res){
     if(doctorExists){
         doctorExists = await doctorExists.toObject();
         delete doctorExists.password;
-        console.log("doctor exists");
         return res.status(405).json({
             data:{
                 doctor: doctorExists

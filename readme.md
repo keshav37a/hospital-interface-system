@@ -60,5 +60,3 @@ Tests for 5 routes have been written/
 To test the api, open the terminal in split mode./
 Type `npm start` in one terminal and run./
 Type `npm test` in one terminal and run./
-  
-
