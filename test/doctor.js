@@ -85,7 +85,6 @@ describe('Post - Doctor Calls', function() {
 
         let response = await axios.post(url, params, {headers: headers});
         expect(response.status).to.equal(200);
-        console.log(response.data);
         let createdPatient = response.data.data.patient;
         createdPatientId = createdPatient._id;
         expect(createdPatient).to.have.property('name');

@@ -46,12 +46,12 @@ After the project has successfully run, In a web browser you can run the followi
   Pass the patient id in the url along with the jwt-token in the headers and if validated then this will retireve all the reports for that patient from oldest to latest.
 
 * Get Reports by Status\
-  Get Request: `http://localhost:8000/api/v1/reports/:status/`\
+  Get Request: `http://localhost:8000/api/v1/reports/:status`\
   Pass the status in the url along with the jwt-token in the headers and if validated then this will retireve all the reports for all the patients for that specific status.
 
 ## Unit Tests
 
-Tests for 5 routes have been written/
+Tests for 5 routes have been written
 
 * Post - Docto - Register
 * Post - Doctor - Login
@@ -59,6 +59,6 @@ Tests for 5 routes have been written/
 * Post - Create new Report for a patient
 * Get - fetch all reports of a patient
 
-To test the api, open the terminal in split mode./
-Type `npm start` in one terminal and run./
-Type `npm test` in one terminal and run./
+To test the api, open the terminal in split mode.
+Type `npm start` in one terminal and run.
+Type `npm test` in the other terminal and run.
