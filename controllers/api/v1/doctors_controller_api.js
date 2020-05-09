@@ -3,20 +3,24 @@ const jwt = require('jsonwebtoken');
 const cryptoObj = require('../../../config/crypto-js');
 
 module.exports.register = async function(req, res){
-    console.log('doctors_controller.register called');    
-
+    
+    //Check to see if the doctor is already registered
+    let reqPhone = req.body.phone;
+    let doctorExists = await Doctor.findOne({phone: reqPhone});
+    if(doctorExists){
+        return res.status(405).json({
+            message: 'Doctor with that Phone Number already registered'
+        });
+    }
+            
     //Encrypting the password of the doctor
     let password = req.body.password;
-    console.log('password of dr: ', password);
-
     let encrPass = cryptoObj.encrypt(password);
-    let decrPass = cryptoObj.decrypt(encrPass);
-
-    console.log('decrPass', decrPass);
     req.body.password = encrPass;
 
     try{
-        let createdDoctor = await Doctor.create(req.body);
+        let createdDoctor = await (await Doctor.create(req.body)).toObject();
+        delete createdDoctor.password;
         if(createdDoctor){
             return res.status(200).json({
                 data: {
@@ -39,21 +43,15 @@ module.exports.register = async function(req, res){
 }
 
 module.exports.login = async function(req, res){
-    console.log('doctors_controller.login called');
-
     let id = req.body.id;
 
     try{
         let doctor = await Doctor.findById(id);
 
         if(doctor){
-
             let pass = req.body.password;
             let pwdFromDb = doctor.password;
             pwdFromDb = cryptoObj.decrypt(pwdFromDb);
-
-            console.log('passFromBody', pass );
-            console.log('pwdFromDb', pwdFromDb);
 
             if(pass==pwdFromDb){
                 return res.status(200).json({
@@ -75,9 +73,3 @@ module.exports.login = async function(req, res){
     }
 }
 
-module.exports.getReportsByStatus = function(req, res){
-    console.log('doctors_controller.getReportsByStatus called');
-    return res.status(200).json({
-        message: 'Successfully retrieved all reports by status'
-    });
-}

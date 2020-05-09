@@ -1,35 +1,52 @@
-Project Title
-An API-project for the doctors of a Hospital which has been allocated by the govt for testing and quarantine & well being of  COVID-19 patients
+# Hospital System API
 
-Prerequisites
-You need node and a text editor like VS Code or Sublime to run this application. 
-You also need to install the following dependencies to run this - 
-        crypto-js
-        express 
-        jsonwebtoken 
-        mongoose
-        nodemon 
-        passport
-        passport-jwt
- 
-Installing
-1. If you have node installed. Navigate to the project directory using cd. 
-For-ex: cd <directory-path>
-2. Open terminal or command prompt
-3. Type npm install <package-name> 
-4. Press enter
-5. Repeat this for all the packages
-6. After the above steps type npm start in the terminal and press enter.
-7. The project will start on localhost with port 8000.
-8. Open browser and type localhost:8000
+## Dependencies needed to install
 
-Built With
-NodeJS 
-Javascript 
-HTML, CSS
+To install any dependency required, Navigate to the project directory, open the terminal and run the command `npm install <dependency_name>`.\
+For example `npm install express`
 
-Author
-Keshav Mathur
+The following dependencies need to be installed before running the project
 
-Acknowledgments
-Hats Off to Arpan Garg, Manisha Khattar, Parikh Jain, Ankush Singhla and all the coding ninjas faculty 
+* express
+* nodemon
+* mongoose
+* passport
+* passport-jwt
+* crypto-js
+* jsonwebtoken
+
+## Running the project
+
+To run the project open the terminal and run the command `npm start`
+
+## Testing the project
+
+After the project has successfully run, In a web browser you can run the following urls to get the data
+
+* Register Doctor\
+  Post Request: `http://localhost:8000/api/v1/doctors/register`\
+  Pass the name, phone and password values in the body for this route and this will return the newly registered doctor details.
+
+* Doctor Login\
+  Post Request: `http://localhost:8000/api/v1/doctors/login`\
+  Pass the (doctor's)id and password values in the body and if validated then  this will return the jwt-token which can be used for further routes which require authorization.
+
+* Register Patient\
+  Post Request: `http://localhost:8000/api/v1/patients/register`\
+  Pass the (patient's)name and (patient's)phone along with the jwt-token in the body and if validated then this will register the patient and return the registered patient details.
+
+* Create Report\
+  Post Request: `http://localhost:8000/api/v1/patients/:id/create_report`\
+  Pass the doctor(id) and status along with the jwt-token in the body and the patient id in the url and if validated then this will create the report for the patient and return the newly created report
+
+* Get All Reports of a patient\
+  Get Request: `http://localhost:8000/api/v1/patients/:id/all_reports`\
+  Pass the patient id in the url and if validated then this will retireve all the reports for that patient from oldest to latest.
+
+* Get Reports by Status\
+  Get Request: `http://localhost:8000/api/v1/reports/:status/`\
+  Pass the status in the url and if validated then this will retireve all the reports for all the patients for that specific status.
+
+
+  
+

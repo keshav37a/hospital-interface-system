@@ -10,10 +10,12 @@ module.exports.register = async function(req, res){
     let phone = req.body.phone;
 
     //Checking if patient is already registered
-    let patientToBeFound = await Patient.findOne({phone: phone});
-    if(patientToBeFound){
+    let patientExists = await Patient.findOne({phone: phone});
+    if(patientExists){
         return res.status(200).json({
-            data: patientToBeFound,
+            data:{
+                patient:patientExists
+            },
             message: 'Patient already registered'
         })
     }
@@ -44,34 +46,23 @@ module.exports.register = async function(req, res){
 
 //Create a new report
 module.exports.createReport = async function(req, res){
-    console.log('patients_controller.createReport called');
-
-    // req.body.status = enums.status;
-    console.log(req.body);
-    console.log(req.params.id);
 
     let patientId = req.params.id;
     let doctorId = req.body.doctor;
-    let status = req.body.status;
 
     //enums mapping has been done in config. Used to get the status from the number
     let st = req.body.status;
     req.body.status = enums[st];
 
-    console.log(enums);
-
     try{
         let patient = await Patient.findById(patientId);
         let doctor = await Doctor.findById(doctorId);
 
-        console.log(patient);
-        console.log(doctor);
-
         //If the patient and doctor ids both exist only then report is created
         if(patient && doctor){
+            req.body.patient = patientId;
             let report = await Report.create(req.body);
             if(report){
-
                 //pushing the new report in the patients reports array
                 await patient.reports.push(report);
                 await patient.save();
@@ -108,21 +99,24 @@ module.exports.allReports = async function(req, res){
         //populating the reports array in patient 
         let patient = await (await Patient.findById(patientId)).
             populate({path: 'reports', populate: 'doctor patient'}).execPopulate();
-        
+
         if(patient){
-            let reports = patient.reports;
-            let arr = [];
-            reports.forEach(element=>{
+            let reportsOfPatient = patient.reports;
+            // reportsOfPatient.sort((a, b)=>{b.status-a.status});
+            let reports = [];
+            reportsOfPatient.forEach(element=>{
                 let obj = {};
                 obj.patient = element.patient.name;
                 obj.doctor = element.doctor.name;
                 obj.status = element.status;
                 obj.date = element.createdAt;
-                arr.push(obj);
+                reports.push(obj);
             })
             
             return res.status(200).json({
-                data: arr,
+                data: { 
+                    reports
+                },
                 message: 'Reports retrieved successfully'
             });
         }
@@ -155,21 +149,21 @@ module.exports.getReportsByStatus = async function(req, res){
 
     console.log('status', status);
     try{
-        let reports = await Report.find({status: status}).populate('patient doctor');
+        let reportsByStatus = await Report.find({status: status}).populate('patient doctor');
 
-        if(reports){
-            let arr = [];
-            reports.forEach(element=>{
+        if(reportsByStatus){
+            let reports = [];
+            reportsByStatus.forEach(element=>{
                 console.log(element);
                 let obj = {};
                 obj.patient = element.patient.name;
                 obj.doctor = element.doctor.name;
                 obj.status = element.status;
                 obj.date = element.createdAt;
-                arr.push(obj);
+                reports.push(obj);
             })
             return res.status(200).json({
-                data: arr,
+                data: {reports},
                 message: 'Reports retrieved successfully'
             });
         }
