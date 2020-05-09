@@ -8,7 +8,13 @@ module.exports.register = async function(req, res){
     let reqPhone = req.body.phone;
     let doctorExists = await Doctor.findOne({phone: reqPhone});
     if(doctorExists){
-        return res.status(405).json({
+        doctorExists = await doctorExists.toObject();
+        delete doctorExists.password;
+        console.log("doctor exists");
+        return res.status(200).json({
+            data:{
+                doctor: doctorExists
+            },
             message: 'Doctor with that Phone Number already registered'
         });
     }

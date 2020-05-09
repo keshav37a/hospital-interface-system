@@ -33,19 +33,19 @@ After the project has successfully run, In a web browser you can run the followi
 
 * Register Patient\
   Post Request: `http://localhost:8000/api/v1/patients/register`\
-  Pass the (patient's)name and (patient's)phone along with the jwt-token in the body and if validated then this will register the patient and return the registered patient details.
+  Pass the (patient's)name and (patient's)phone in the body along with the jwt-token in the header and if validated then this will register the patient and return the registered patient details.
 
 * Create Report\
   Post Request: `http://localhost:8000/api/v1/patients/:id/create_report`\
-  Pass the doctor(id) and status along with the jwt-token in the body and the patient id in the url and if validated then this will create the report for the patient and return the newly created report
+  Pass the doctor(id) and status in the body along with the jwt-token in the headers and the patient id in the url and if validated then this will create the report for the patient and return the newly created report
 
 * Get All Reports of a patient\
   Get Request: `http://localhost:8000/api/v1/patients/:id/all_reports`\
-  Pass the patient id in the url and if validated then this will retireve all the reports for that patient from oldest to latest.
+  Pass the patient id in the url along with the jwt-token in the headers and if validated then this will retireve all the reports for that patient from oldest to latest.
 
 * Get Reports by Status\
   Get Request: `http://localhost:8000/api/v1/reports/:status/`\
-  Pass the status in the url and if validated then this will retireve all the reports for all the patients for that specific status.
+  Pass the status in the url along with the jwt-token in the headers and if validated then this will retireve all the reports for all the patients for that specific status.
 
 
   
