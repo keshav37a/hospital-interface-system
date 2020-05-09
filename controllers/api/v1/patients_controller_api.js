@@ -7,12 +7,18 @@ const enums = require('../../../config/statusEnums');
 module.exports.register = async function(req, res){
     console.log('patients_controller.register called');
 
+    if(req.body.phone==undefined){
+        return res.status(206).json({
+            message: 'Incomplete data provided'
+        });
+    }
+
     let phone = req.body.phone;
 
     //Checking if patient is already registered
     let patientExists = await Patient.findOne({phone: phone});
     if(patientExists){
-        return res.status(200).json({
+        return res.status(405).json({
             data:{
                 patient:patientExists
             },
@@ -50,6 +56,13 @@ module.exports.createReport = async function(req, res){
     let patientId = req.params.id;
     let doctorId = req.body.doctor;
 
+    
+    if(patientId==undefined || doctorId==undefined){
+        return res.status(206).json({
+            message: 'Incomplete data provided'
+        });
+    }
+
     //enums mapping has been done in config. Used to get the status from the number
     let st = req.body.status;
     req.body.status = enums[st];
@@ -69,10 +82,12 @@ module.exports.createReport = async function(req, res){
             }
             return res.status(200).json({
                 data:{
-                    patient: patient.name,
-                    status: report.status,
-                    doctor: doctor.name,
-                    date: report.createdAt
+                    report:{
+                        patient: patient.name,
+                        status: report.status,
+                        doctor: doctor.name,
+                        date: report.createdAt
+                    }
                 },
                 message: 'Report generated successfully'
             })
@@ -115,7 +130,7 @@ module.exports.allReports = async function(req, res){
             
             return res.status(200).json({
                 data: { 
-                    reports
+                    reports: reports
                 },
                 message: 'Reports retrieved successfully'
             });

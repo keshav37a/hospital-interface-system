@@ -3,6 +3,13 @@ const jwt = require('jsonwebtoken');
 const cryptoObj = require('../../../config/crypto-js');
 
 module.exports.register = async function(req, res){
+
+    //Check if all fields are present
+    if(req.body.phone==undefined || req.body.name==undefined || req.body.password==undefined){
+        return res.status(206).json({
+            message: 'Incomplete data provided'
+        });
+    }
     
     //Check to see if the doctor is already registered
     let reqPhone = req.body.phone;
@@ -11,7 +18,7 @@ module.exports.register = async function(req, res){
         doctorExists = await doctorExists.toObject();
         delete doctorExists.password;
         console.log("doctor exists");
-        return res.status(200).json({
+        return res.status(405).json({
             data:{
                 doctor: doctorExists
             },
@@ -51,6 +58,12 @@ module.exports.register = async function(req, res){
 module.exports.login = async function(req, res){
     let id = req.body.id;
 
+    if(req.body.id==undefined || req.body.password==undefined){
+        return res.status(206).json({
+            message: 'Incomplete data provided'
+        });
+    }
+
     try{
         let doctor = await Doctor.findById(id);
 
@@ -73,6 +86,7 @@ module.exports.login = async function(req, res){
         });
     }
     catch(err){
+        console.log(err);
         return res.status(500).json({
             message: `${err}`
         });
