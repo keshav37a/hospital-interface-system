@@ -16,6 +16,7 @@ The following dependencies need to be installed before running the project
 * jsonwebtoken
 * mocha
 * chai
+* chai-http
 
 ## Running the project
 
@@ -59,6 +60,7 @@ Tests for 5 routes have been written
 * Post - Create new Report for a patient
 * Get - fetch all reports of a patient
 
-To test the api, open the terminal in split mode.
-Type `npm start` in one terminal and run.
-Type `npm test` in the other terminal and run.
+To test the api, open the terminal
+
+* In package.json - replace the test script with this `"test": "mocha",`
+* Type `npm test` in the terminal and run

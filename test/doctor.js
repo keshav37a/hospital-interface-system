@@ -1,132 +1,169 @@
 const chai = require('chai');
-const assert = chai.assert;
+const chaiHttp = require('chai-http');
 const expect = chai.expect;
-const axios = require('axios');
 const Doctor = require('../models/doctor');
 const Patient = require('../models/patient');
 const Report = require('../models/report');
-const db = require('../config/mongoose');
+const app = require('../index');
+
+chai.use(chaiHttp);
 
 let doctorsData = {};
 
-let bearer = "Bearer ";
 let authToken = "";
-var headers = {};
 
 var createdDoctorId = "";
 let createdPatientId = "";
 
-let baseUrl = 'http://localhost:8000/api/v1'
-let doctorsUrl = '/doctors';
-let patientsUrl = '/patients';
+let baseUrl = 'http://localhost:8000'
+let doctorsUrl = '/api/v1/doctors';
+let patientsUrl = '/api/v1/patients';
  
 doctorsData['baseUrl'] = baseUrl;
 doctorsData['doctorsUrl'] = doctorsUrl;
 
-//Params for post request
+//Params for register doctor post request
 let doctorName = 'Doctor_Test';
 let doctorPhone = '0123456789';
 let password = 'password';
 
-//Params for post request for patient
+//Params for register patient post request
 let patientName = "Patient_Test";
 let patientPhone = "0987654321";
 
 
 describe('Post - Doctor Calls', function() {
 
-    it('Post - Doctor - Register', async function() 
+    it('Post - doctors/register', function(done) 
     {
         let call = "/register";
-        let url = baseUrl+doctorsUrl+call;
 
-        const params = new URLSearchParams();
-        params.append('name', doctorName);
-        params.append('phone', doctorPhone);
-        params.append('password', password);
+        chai.request(app)
+            .post(doctorsUrl+call)
+            .type('form')
+            .set('content-type', 'application/x-www-form-urlencoded')
+            .send({
+                'name': doctorName,
+                'phone': doctorPhone,
+                'password': password
+            })
+            .end((err, body, response)=>{
+                if(err){console.log(err);}
 
-        let response = await axios.post(url, params);
-        let createdDoctor = response.data.data.doctor;
-        createdDoctorId = createdDoctor._id;
-        doctorsData['createdDoctorId'] = createdDoctorId;
-
-        expect(response.status).to.equal(200);
-        expect(createdDoctor).to.have.property('name');
-        expect(createdDoctor).to.have.property('phone');
-        expect((createdDoctorId.toString()).length).to.greaterThan(0);
+                let createdDoctor = body.body.data.doctor;
+                createdDoctorId = createdDoctor._id;
+                doctorsData['createdDoctorId'] = createdDoctorId;
+                expect(body.status).to.equal(200);
+                expect(createdDoctor).to.have.property('name');
+                expect(createdDoctor).to.have.property('phone');
+                expect((createdDoctorId.toString()).length).to.greaterThan(0);
+                done();
+            })
     });
 
 
-    it('Post - Doctor - Login', async function(){
+    it('Post - doctors/login', function(done){
         let call = "/login";
-        let url = baseUrl+doctorsUrl+call;
-        const params = new URLSearchParams();
 
-        params.append('id', createdDoctorId);
-        params.append('password', password);
+        chai.request(app)
+            .post(doctorsUrl+call)
+            .type('form')
+            .set('content-type', 'application/x-www-form-urlencoded')
+            .send({
+                'id': createdDoctorId,
+                'password': password
+            })
+            .end((err, body, response)=>{
+                if(err){console.log(err);}
 
-        let response = await axios.post(url, params);
-        expect(response.status).to.equal(200);
-        expect(response.data.data).to.have.property('token');
-        authToken = response.data.data.token;
-        expect(authToken.length).to.greaterThan(0);
+                expect(body.status).to.equal(200);
+                expect(body.body.data).to.have.property('token');
+                authToken = body.body.data.token;
+                expect(authToken.length).to.greaterThan(0);
+                done();
+            })
+
     });
 
-    it('Post - Patient - Register', async function(){
+    it('Post - patients/register', function(done){
         let call = '/register';
-        let url = baseUrl+patientsUrl+call;
 
-        const params = new URLSearchParams();
-        params.append('name', patientName);
-        params.append('phone', patientPhone);
-        
-        headers['Authorization'] = bearer + authToken;
-        doctorsData['headers'] = headers;
+        chai.request(app)
+            .post(patientsUrl+call)
+            .type('form')
+            .set('content-type', 'application/x-www-form-urlencoded')
+            .set('Authorization', `Bearer ${authToken}`)
+            .send({
+                'name': patientName,
+                'phone': patientPhone
+            })
+            .end((err, body, response)=>{
+                if(err){console.log(err);}
 
-        let response = await axios.post(url, params, {headers: headers});
-        expect(response.status).to.equal(200);
-        let createdPatient = response.data.data.patient;
-        createdPatientId = createdPatient._id;
-        expect(createdPatient).to.have.property('name');
-        expect(createdPatient).to.have.property('phone');
-        expect(createdPatient).to.have.property('createdAt');
-        expect(createdPatientId.length).to.greaterThan(0);
+                expect(body.status).to.equal(200);
+                let createdPatient = body.body.data.patient;
+                expect(createdPatient).to.have.property('_id');
+                createdPatientId = createdPatient._id;
+                expect(createdPatient).to.have.property('name');
+                expect(createdPatient).to.have.property('phone');
+                expect(createdPatient).to.have.property('createdAt');
+                expect(createdPatientId.length).to.greaterThan(0);    
+                done();
+            })
     })
 
-    it('Post - Create new Report for a patient', async function(){
+    it('Post - patients/:id/create_report', function(done){
         let call = '/create_report';
-        let url = baseUrl + patientsUrl + '/' +  createdPatientId + call;
+        let url = patientsUrl + '/' +  createdPatientId + call;
 
-        const params = new URLSearchParams();
         let status = Math.floor(Math.random() * (3 - 0)); 
 
-        params.append('doctor', createdDoctorId);
-        params.append('status', status);
+        chai.request(app)
+            .post(url)
+            .type('form')
+            .set('content-type', 'application/x-www-form-urlencoded')
+            .set('Authorization', `Bearer ${authToken}`)
+            .send({
+                'doctor': createdDoctorId,
+                'status': status
+            })
+            .end((err, body, response)=>{
+                if(err){console.log(err);}
+
+                expect(body.status).to.equal(200);
+                let report = body.body.data.report;
+                status = report.status;
+                expect(report).to.have.property('patient');
+                expect(report).to.have.property('status');
+                expect(report).to.have.property('doctor');
+                expect(report).to.have.property('date');
+                expect(status.length).to.above(0);
+                done();
+            })
         
-        let response = await axios.post(url, params, {headers: headers});
-        expect(response.status).to.equal(200);
-        let report = response.data.data.report;
-        status = report.status;
-        expect(report).to.have.property('patient');
-        expect(report).to.have.property('status');
-        expect(report).to.have.property('doctor');
-        expect(report).to.have.property('date');
-        expect(status.length).to.above(0);
     })
 
-    it('Get - fetch all reports of a patient', async function(){
+    it('Get - patients/:id/all_reports', function(done){
         let call = '/all_reports';
-        let url = baseUrl + patientsUrl + '/' + createdPatientId + call;
-        let response = await axios.get(url, {headers:headers});
-        expect(response.status).to.equal(200);
-        let reports = response.data.data.reports;
+        let url = patientsUrl + '/' + createdPatientId + call;
 
-        expect(reports).to.be.an('array');
-        expect(reports[0]).to.have.property('patient');
-        expect(reports[0]).to.have.property('status');
-        expect(reports[0]).to.have.property('doctor');
-        expect(reports[0]).to.have.property('date');
-        expect(reports.length).to.greaterThan(0);
+        chai.request(app)
+            .get(url)
+            .set('content-type', 'application/x-www-form-urlencoded')
+            .set('Authorization', `Bearer ${authToken}`)
+            .end((err, body, response)=>{
+                if(err){console.log(err);}
+
+                expect(body.status).to.equal(200);
+                let reports = body.body.data.reports;
+                expect(reports).to.be.an('array');
+                expect(reports[0]).to.have.property('patient');
+                expect(reports[0]).to.have.property('status');
+                expect(reports[0]).to.have.property('doctor');
+                expect(reports[0]).to.have.property('date');
+                expect(reports.length).to.greaterThan(0);
+                done();
+            })
     })
 
     after(async function() {
