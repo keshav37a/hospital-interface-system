@@ -54,7 +54,7 @@ After the project has successfully run, In a web browser you can run the followi
 
 Tests for 5 routes have been written
 
-* Post - Docto - Register
+* Post - Doctor - Register
 * Post - Doctor - Login
 * Post - Patient - Register
 * Post - Create new Report for a patient
