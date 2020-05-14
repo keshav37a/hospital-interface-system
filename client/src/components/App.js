@@ -1,6 +1,8 @@
 import React from 'react';
-import './App.css';
-import hospitalService from './services/hospitalService';
+import '../styles/App.scss'
+import hospitalService from '../services/hospitalService';
+import Report from './report';
+import SignIn from './signIn';
 
 class App extends React.Component{
 
@@ -24,16 +26,9 @@ class App extends React.Component{
 
   render(){
     return(
-      this.state.reports.map((report)=>{
-        return(
-          <div>
-          <div>name: {report.patient}</div>
-          <div>doctor: {report.doctor}</div>
-          <div>status: {report.status}</div>
-          <div>date: {report.date}</div>
-        </div>
-        )
-      })
+      <div>
+        <div><SignIn/></div>
+      </div>
     )
   }
 
