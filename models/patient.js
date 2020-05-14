@@ -11,7 +11,11 @@ const patientSchema = new mongoose.Schema({
     reports: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'report'
-    }]
+    }],
+    doctor:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'doctor'
+    }
 },{
     timestamps: true
 });

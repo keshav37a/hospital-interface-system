@@ -56,7 +56,7 @@ module.exports.register = async function(req, res){
 
 module.exports.login = async function(req, res){
     let id = req.body.id;
-
+    console.log('req.body:', req.body);
     if(req.body.id==undefined || req.body.password==undefined){
         return res.status(206).json({
             message: 'Incomplete data provided'
@@ -92,3 +92,40 @@ module.exports.login = async function(req, res){
     }
 }
 
+module.exports.retieveAllPatients = async (req, res)=>{
+    let id = req.params.id;
+    console.log('req.body:', req.body);
+    if(req.body.id==undefined){
+        return res.status(405).json({
+            message: 'Unauthorized'
+        });
+    }
+
+    try{
+        let doctor = await Doctor.findById(id);
+
+        if(doctor){
+            let pass = req.body.password;
+            let pwdFromDb = doctor.password;
+            pwdFromDb = cryptoObj.decrypt(pwdFromDb);
+
+            if(pass==pwdFromDb){
+                return res.status(200).json({
+                    data:{
+                        token: jwt.sign(doctor.toJSON(), 'judgement-day', {expiresIn: 1000000})
+                    },
+                    message:'Here is your doctor token. Please keep it safe'
+                })
+            }
+        }
+        return res.status(401).json({
+            message:'Invalid Credentials'
+        });
+    }
+    catch(err){
+        console.log(err);
+        return res.status(500).json({
+            message: `${err}`
+        });
+    }
+}

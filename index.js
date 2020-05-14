@@ -4,8 +4,10 @@ const db = require('./config/mongoose');
 const app = new express();
 const passport = require('passport');
 const passportJWT = require('./config/passport-jwt-strategy');
+const bodyParser = require('body-parser');
 
 app.use(express.urlencoded());
+app.use(bodyParser.json())
 
 app.use(passport.initialize());
 

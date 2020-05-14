@@ -13,7 +13,7 @@ module.exports.register = async function(req, res){
     }
 
     let phone = req.body.phone;
-
+    let doctorId = req.params.id;
     //Checking if patient is already registered
     let patientExists = await Patient.findOne({phone: phone});
     if(patientExists){
@@ -27,6 +27,7 @@ module.exports.register = async function(req, res){
 
     try{
         //Registering a new patient
+        req.body.doctor = doctorId;
         let createdPatient = await Patient.create(req.body);
         if(createdPatient){
             return res.status(200).json({

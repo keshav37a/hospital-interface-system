@@ -1,8 +1,8 @@
 import React from 'react';
 import '../styles/App.scss'
 import hospitalService from '../services/hospitalService';
-import Report from './report';
-import SignIn from './signIn';
+import Report from './Report';
+import SignIn from './SignIn';
 
 class App extends React.Component{
 
