@@ -5,13 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha",
-    "start": "nodemon index.js"
+    "server": "nodemon index.js"
   },
   "author": "Keshav Mathur",
   "license": "ISC",
   "dependencies": {
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
+    "concurrently": "^5.2.0",
     "crypto-js": "^4.0.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",

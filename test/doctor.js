@@ -52,7 +52,6 @@ describe('Post - Doctor Calls', function() {
 
                 let createdDoctor = body.body.data.doctor;
                 createdDoctorId = createdDoctor._id;
-                doctorsData['createdDoctorId'] = createdDoctorId;
                 expect(body.status).to.equal(200);
                 expect(createdDoctor).to.have.property('name');
                 expect(createdDoctor).to.have.property('phone');
