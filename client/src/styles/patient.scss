@@ -1,38 +1,86 @@
+
+
 .patients-container{
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     margin: 1rem;
-    background-color: #B3CDE0;
 
-    .single-patient-container{
-        margin: 1rem;
-        padding: 1rem;
+    .header{
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+    .container{
+        display: flex;
+        flex-direction: row;    
+        justify-content: flex-start;
         background-color: #6497B1;
         border: 1px solid black;
-        width: 95%;
+        width: 100%;
+        margin-bottom: 1rem;
 
-        .labels-container{
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-start;
-
-            .labels{
-                margin-right: 1rem;
+        .single-patient-container{
+            margin: 1rem;
+            padding: 1rem;
+            flex-grow: 1;
+    
+            .labels-container{
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-start;
+                margin-bottom: 1rem;
+    
+                .labels{
+                    margin-right: 1rem;
+                }
+    
             }
-
-        }
-
-        .reports-container{
-            display: flex;
-            flex-direction: row;
-            justify-content: start;
-            .single-report-container{
-                margin-top: 1rem;
-                margin-right: 2rem;
+    
+            .reports-container{
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-start;
+                flex-wrap: wrap;
+    
+                .single-report-container{
+                    margin-right: 1rem;
+                    margin-bottom: 2rem;
+                }
             }
+    
         }
+        .add-report-container{
+            margin: 2rem;
+            
 
+            .flexRow{
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-start;
+
+                .dropdown{
+                    margin-right: 1rem;
+                    select{
+                        border: none;
+                        padding: 0.3rem;
+                        background-color: #B3CDE0;
+                        option{
+                            background-color: transparent;
+                        }
+                    }
+                }
+                .submit-btn{
+                    button{
+                        border: none;
+                        padding: 0.5rem;
+                        padding-left: 1rem;
+                        padding-right: 1rem;
+                        background-color: #B3CDE0;
+                    }
+                }
+
+            }
+            
+        }
     }
-
 }

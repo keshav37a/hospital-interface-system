@@ -56,6 +56,8 @@ module.exports.createReport = async function(req, res){
     let patientId = req.params.id;
     let doctorId = req.body.doctor;
 
+    console.log(req.params.id);
+    console.log(req.body.doctor);
     
     if(patientId==undefined || doctorId==undefined){
         return res.status(206).json({
