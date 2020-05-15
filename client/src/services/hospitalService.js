@@ -34,8 +34,6 @@ export default {
     return signInData;
   },
 
-  // addReport(this.doctor._id, this.state.status, this.state.authToken, this.state.patientId);    
-
   addReport: async (doctorId, status, authToken, patientId)=>{
     let body = {doctor:doctorId, status: status};
     let tokenStr = 'Bearer ' + authToken;
@@ -47,12 +45,11 @@ export default {
     let tokenStr = 'Bearer ' + authToken;
     let res = await axios.post(`/api/v1/patients/${doctorId}/register`, body, {headers: {'Authorization': tokenStr}});
     console.log(res);
+  },
+
+  getStats: async(doctorId, authToken)=>{
+    let tokenStr = 'Bearer ' + authToken;
+    let res = await axios.get(`/api/v1/doctors/${doctorId}/all_stats`, {headers: {'Authorization': tokenStr}});
+    return res.data.data.stats;
   }
-
-  // Post Request: `http://localhost:8000/api/v1/patients/:id/register`\
-  // Pass the (patient's)name and (patient's)phone in the body along with the jwt-token in the header and 
-  // the doctor's id in the url as params, if validated then this will register the patient and return 
-  // the registered patient details.
 }
-
-// http://localhost:8000/api/v1/patients/5ebd4f9b15607a5388fb4643/all_reports

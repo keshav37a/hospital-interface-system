@@ -1,6 +1,7 @@
 import React from 'react';
 import HospitalService from '../services/hospitalService';
 import '../styles/patient.scss'
+import { Redirect } from 'react-router';
 import moment from 'moment';
 
 class Patient extends React.Component{
@@ -14,6 +15,7 @@ class Patient extends React.Component{
     patientId = '';
     newPatientName = '';
     newPatientPhone = '';
+    redirect = false;
 
     state = {authToken: this.authToken, 
              isSignedIn: this.isSignedIn, 
@@ -23,7 +25,8 @@ class Patient extends React.Component{
              patientId: this.patientId,
              doctorId: this.doctorId,
              newPatientName: this.newPatientName,
-             newPatientPhone: this.newPatientPhone};
+             newPatientPhone: this.newPatientPhone,
+             redirect: false};
 
     constructor(props){
         super();
@@ -33,6 +36,7 @@ class Patient extends React.Component{
         this.handleChangeName = this.handleChangeName.bind(this);
         this.handleChangePhone = this.handleChangePhone.bind(this);
         this.handleSubmitAddPatient = this.handleSubmitAddPatient.bind(this);
+        this.handleNavigateStats = this.handleNavigateStats.bind(this);
 
         this.doctorId = props.location.state.id;
         this.authToken = props.location.state.signInData.token;
@@ -61,7 +65,6 @@ class Patient extends React.Component{
     handleChangeDropdown(event) {
         const selectedIndex = event.target[event.target.selectedIndex].getAttribute('data-key');
         let status = selectedIndex;
-        console.log('change dropdown even called');
         console.log(selectedIndex);
         let patientId = event.target.value;
         this.setState({status: status, patientId: patientId});
@@ -69,39 +72,50 @@ class Patient extends React.Component{
 
     async handleSubmit(event) {
         event.preventDefault();
-        let status = this.state.status;
-        let res = await HospitalService.addReport(this.state.doctorId, 
-                                                  this.state.status, 
-                                                  this.state.authToken, 
-                                                  this.state.patientId);
+        await HospitalService.addReport(this.state.doctorId, 
+                                        this.state.status, 
+                                        this.state.authToken, 
+                                        this.state.patientId);
         this.componentDidUpdate();
     }
 
     async handleSubmitAddPatient(event){
         event.preventDefault();
-        console.log('handle submit called');
-        // console.log(this.state);
         let res = await HospitalService.addPatient(this.state.doctorId, 
                                                    this.state.newPatientName, 
                                                    this.state.newPatientPhone, 
                                                    this.state.authToken);
-        console.log(res);
         this.componentDidUpdate();
     }
 
     handleChangeName(event){
         this.setState({newPatientName: event.target.value});
-        console.log(this.state);
     }
+
     handleChangePhone(event){
         this.setState({newPatientPhone: event.target.value});
-        console.log(this.state);
+        
+    }
+
+    handleNavigateStats(event){
+        event.preventDefault();
+        this.setState({redirect:true});
+        this.componentDidUpdate();
     }
 
     render(){
+
+        if(this.state.redirect) {
+            return <Redirect to={{
+                pathname: '/stats',
+                state: { doctor: this.state.doctor, token: this.state.authToken}
+            }}/>
+        }
+
         let patients = this.state.patients;
         return(
             <div className="patients-container">
+                <div className="stats" onClick={this.handleNavigateStats}>Stats</div>
                 <div className="header">Add Patient</div>
                 <div className="add-patient-container">
                     <div><input type="text" placeholder="Patient Name" onChange={this.handleChangeName}></input></div>

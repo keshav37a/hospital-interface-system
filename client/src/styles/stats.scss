@@ -1,0 +1,28 @@
+.header-stats{
+    font-weight: 600;
+    margin: 1rem;
+}
+
+.body{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+
+    .labels-container-stats{
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        margin: 1rem;
+        background-color: #6497B1;
+        padding: 1rem;
+        border: 1px solid black;
+
+        .labels{
+            margin-right: 1rem;
+        }
+    }
+
+}

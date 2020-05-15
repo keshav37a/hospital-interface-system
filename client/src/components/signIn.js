@@ -16,12 +16,10 @@ class SignIn extends React.Component{
     
     render(){
         if(this.state.redirect) {
-            // return <Redirect push to="/patients"/>;
             return <Redirect to={{
                 pathname: '/patients',
                 state: { id: this.state.doctor, signInData: this.state.signInData}
-            }}
-    />
+            }}/>
         }
         return (
             <div className="forms-container flex row center">
@@ -33,7 +31,7 @@ class SignIn extends React.Component{
                         <div className="check-sign-in-container">
                             <input className="check-sign-in mar-pad-0" type="checkbox" name="signed-in"/>
                             <div className="link-desc">Keep Me Signed In</div>
-                            <a href="" className="link-appearance">Reset Password</a>
+                            <a className="link-appearance">Reset Password</a>
                         </div>
                         <button className="btn-sign-in mar1 width90 pad1" type="submit" onClick={this.handleSubmit}>Sign In</button>
                         <div className="flex row start mb1">
@@ -48,17 +46,15 @@ class SignIn extends React.Component{
 
     handleChangeDoctor(event){
         this.setState({doctor: event.target.value});
-        // console.log(this.state);
     }
+
     handleChangePassword(event){
         this.setState({password: event.target.value});
-        // console.log(this.state);
     }
+
     async handleSubmit(event){
         event.preventDefault();
-        // alert(`${this.state.doctor}  ${this.state.password}`);
         let signInData = await HospitalService.doctorSignIn(this.state.doctor, this.state.password);
-        // console.log(signInData);
         if(signInData['isSignedIn']===true){
             this.setState({redirect: true, signInData: signInData});
         }

@@ -1,5 +1,6 @@
 const Doctor = require('../../../models/doctor');
 const Patient = require('../../../models/patient');
+const Stats = require('../../../models/stats');
 const jwt = require('jsonwebtoken');
 const cryptoObj = require('../../../config/crypto-js');
 
@@ -141,6 +142,36 @@ module.exports.getDoctorInfo = async (req, res)=>{
             },
             message: 'Successful'
         });                
+    }
+    catch(err){
+        console.log(err);
+        return res.status(500).json({
+            message: `${err}`
+        });
+    }
+}
+
+//Get all stats
+module.exports.getStats = async (req, res)=>{
+    try{
+        let doctorId = req.params.id;
+        if(doctorId==undefined){
+            return res.status(405).json({
+                message: 'Unauthorized'
+            });
+        }
+        let stats = await Stats.find().populate('patients');
+        if(!stats){
+            return res.status(404).json({
+                message: 'Not Found'
+            });
+        }
+        return res.status(200).json({
+            data: {
+                stats: stats
+            },
+            message: 'Successful'
+        });
     }
     catch(err){
         console.log(err);

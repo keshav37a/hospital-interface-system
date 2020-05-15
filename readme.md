@@ -38,6 +38,10 @@ After the project has successfully run, In a web browser you can run the followi
   Post Request: `http://localhost:8000/api/v1/patients/:id/register`\
   Pass the (patient's)name and (patient's)phone in the body along with the jwt-token in the header and the doctor's id in the url as params, if validated then this will register the patient and return the registered patient details.
 
+* Get Stats\
+  Get Request: `http://localhost:8000/api/v1/doctors/:id/get_stats`\
+  Pass the doctor's id in the url along with the jwt-token in the header if validated then this will retrieve all the stats for the patients.
+
 * Create Report\
   Post Request: `http://localhost:8000/api/v1/patients/:id/create_report`\
   Pass the doctor(id) and status in the body along with the jwt-token in the headers and the patient id in the url and if validated then this will create the report for the patient and return the newly created report

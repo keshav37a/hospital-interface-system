@@ -6,5 +6,6 @@ router.post('/register', doctorsController.register);
 router.post('/login', doctorsController.login);
 router.get('/:id/all_patients', doctorsController.getAllPatients);
 router.get('/:id', doctorsController.getDoctorInfo);
+router.get('/:id/all_stats', doctorsController.getStats);
 
 module.exports = router;
