@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles/stats.scss';
 import HospitalService from '../services/hospitalService';
-import {Pie, Doughnut} from 'react-chartjs-2';
+import {Pie} from 'react-chartjs-2';
 
 class Stats extends React.Component{
 
@@ -37,27 +37,23 @@ class Stats extends React.Component{
   }
 
   getStats = async()=>{
-    console.log(this.doctor.doctor._id);
     let stats = await  HospitalService.getStats(this.doctor.doctor._id, this.state.authToken);
+
     let labels = [];
     let data = [];
+
     stats.map((el)=>{
         labels.push(el.status);
         data.push(el.patients.length);
     })
 
-    console.log(labels);
-    console.log(data);
     let datasets = this.state.datasets;
     datasets[0].data = data;
     this.setState({stats: stats, labels: labels, datasets:datasets});
-    console.log(this.state);
   }
 
   render(){
     let stats = this.state.stats;
-    console.log('render');
-    console.log(stats);
     return(
       <div>
         <div>Stats Page</div>
