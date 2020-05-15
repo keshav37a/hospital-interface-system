@@ -52,8 +52,10 @@ class Patient extends React.Component{
     }
 
     handleChangeDropdown(event) {
-        const selectedIndex = event.target.options.selectedIndex;
+        const selectedIndex = event.target[event.target.selectedIndex].getAttribute('data-key');
         let status = selectedIndex;
+        console.log('change dropdown even called');
+        console.log(selectedIndex);
         let patientId = event.target.value;
         this.setState({status: status, patientId: patientId});
     }
@@ -103,14 +105,16 @@ class Patient extends React.Component{
                                 <div className="flexRow">
                                     <div className="dropdown">
                                         <select onChange={this.handleChangeDropdown}>
+                                            <option data-key="-1">Select Status</option>
                                             <option data-key="0" value={patient._id}>Negative</option>
                                             <option data-key="1" value={patient._id}>Travelled-Quarantine</option>
                                             <option data-key="2" value={patient._id}>Symptoms-Quarantine</option>
                                             <option data-key="3" value={patient._id}>Positive-Admit</option>
+                                            <option data-key="4" value={patient._id}>Cured</option>
                                         </select>
                                     </div>
                                     <div className="submit-btn">
-                                        <button onClick={this.handleSubmit}>Submit</button>
+                                        <button onClick={this.handleSubmit}>Generate Report</button>
                                     </div>
                                 </div>
                             </div>
@@ -123,3 +127,4 @@ class Patient extends React.Component{
 }
 
 export default Patient;
+
