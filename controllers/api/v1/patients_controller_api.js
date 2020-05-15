@@ -58,9 +58,6 @@ module.exports.createReport = async function(req, res){
 
     let patientId = req.params.id;
     let doctorId = req.body.doctor;
-
-    console.log('req.params.id', req.params.id);
-    console.log('req.body.doctor', req.body.doctor);
     
     if(patientId==undefined || doctorId==undefined){
         console.log('undefined');
@@ -72,7 +69,6 @@ module.exports.createReport = async function(req, res){
     //enums mapping has been done in config. Used to get the status from the number
     let st = req.body.status;
     req.body.status = enums.enums[st];
-    console.log('req.body.status', req.body.status);
 
     try{
         let patient = await Patient.findById(patientId).populate('reports');
@@ -82,7 +78,6 @@ module.exports.createReport = async function(req, res){
         if(patient && doctor){
             req.body.patient = patientId;
             let report = await Report.create(req.body);
-            console.log('report created');
             if(report){
                 
                 //If this is the first report then just create the report and push it to patient and push the patient in the patient array of stat schema
@@ -95,16 +90,13 @@ module.exports.createReport = async function(req, res){
                 
                 if(!StatsForNewStatus){
                     StatsForNewStatus = await Stats.create({status: statStatusNew});
-                    console.log('StatsForNewStatus created', StatsForNewStatus);
                 }
                 
                 //Finding out older reports of patient and taking out the latest status from them
                 let patientReports = patient.reports;
                 if(patientReports.length>0){
                     let olderReport = patientReports[patientReports.length-1];
-                    console.log('olderReport', olderReport);
                     let oldStatus = olderReport.status;
-                    console.log('oldStatus', oldStatus);   
                     //Further compact the enums to only positive negative and cured
                     let statStatusOld = enums.statsEnums[oldStatus];
 
@@ -112,30 +104,20 @@ module.exports.createReport = async function(req, res){
                     let StatsForOldStatus = await Stats.findOne({status: statStatusOld});
                     if(!StatsForOldStatus){
                         StatsForOldStatus = Stats.create({status: statStatusOld});
-                        console.log('StatsForOldStatus created', StatsForOldStatus);
                     }
 
                     //Remove the patient from the patients array of old stat in stats schema 
-                    console.log('statStatusOld', statStatusOld);
-                    console.log('statStatusNew', statStatusNew);
                     StatsForOldStatus = await Stats.findOne({status: statStatusOld});
-                    console.log('StatsForOldStatus', StatsForOldStatus);
                     let patientArrForOldStatus = StatsForOldStatus.patients;
                     patientArrForOldStatus.pull(patientId);
                     StatsForOldStatus.save();
-
-                    // StatsForOldStatus = await Stats.update({status: statStatusOld}, {$pull: {patients: {$in:[`${patientId}`]}}});
-                    console.log('StatsForOldStatus after updation', StatsForOldStatus);
                 }
 
                 //Add the patient to the patients array of new stat in stats schema 
                 StatsForNewStatus = await Stats.findOne({status: statStatusNew});
-                console.log('StatsForNewStatus', StatsForNewStatus);
                 let patientArrForNewStatus = StatsForNewStatus.patients;
                 patientArrForNewStatus.push(patientId);
                 StatsForNewStatus.save();
-                // StatsForNewStatus = await Stats.update({status: statStatusNew}, {$push: {patients: {$in:[`${patientId}`]}}});
-                console.log('StatsForNewStatus after updation', StatsForNewStatus);
                 
                 //pushing the new report in the reports array of patients schema 
                 await patient.reports.push(report);
@@ -246,3 +228,5 @@ module.exports.getReportsByStatus = async function(req, res){
         });
     }
 }
+
+

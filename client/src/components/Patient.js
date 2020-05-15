@@ -12,6 +12,8 @@ class Patient extends React.Component{
     patients = [];
     status = 0;
     patientId = '';
+    newPatientName = '';
+    newPatientPhone = '';
 
     state = {authToken: this.authToken, 
              isSignedIn: this.isSignedIn, 
@@ -19,13 +21,18 @@ class Patient extends React.Component{
              doctor: this.doctor, 
              status: this.status, 
              patientId: this.patientId,
-             doctorId: this.doctorId};
+             doctorId: this.doctorId,
+             newPatientName: this.newPatientName,
+             newPatientPhone: this.newPatientPhone};
 
     constructor(props){
         super();
 
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChangeDropdown = this.handleChangeDropdown.bind(this);
+        this.handleChangeName = this.handleChangeName.bind(this);
+        this.handleChangePhone = this.handleChangePhone.bind(this);
+        this.handleSubmitAddPatient = this.handleSubmitAddPatient.bind(this);
 
         this.doctorId = props.location.state.id;
         this.authToken = props.location.state.signInData.token;
@@ -63,14 +70,44 @@ class Patient extends React.Component{
     async handleSubmit(event) {
         event.preventDefault();
         let status = this.state.status;
-        let res = await HospitalService.addReport(this.state.doctorId, this.state.status, this.state.authToken, this.state.patientId);
+        let res = await HospitalService.addReport(this.state.doctorId, 
+                                                  this.state.status, 
+                                                  this.state.authToken, 
+                                                  this.state.patientId);
         this.componentDidUpdate();
+    }
+
+    async handleSubmitAddPatient(event){
+        event.preventDefault();
+        console.log('handle submit called');
+        // console.log(this.state);
+        let res = await HospitalService.addPatient(this.state.doctorId, 
+                                                   this.state.newPatientName, 
+                                                   this.state.newPatientPhone, 
+                                                   this.state.authToken);
+        console.log(res);
+        this.componentDidUpdate();
+    }
+
+    handleChangeName(event){
+        this.setState({newPatientName: event.target.value});
+        console.log(this.state);
+    }
+    handleChangePhone(event){
+        this.setState({newPatientPhone: event.target.value});
+        console.log(this.state);
     }
 
     render(){
         let patients = this.state.patients;
         return(
             <div className="patients-container">
+                <div className="header">Add Patient</div>
+                <div className="add-patient-container">
+                    <div><input type="text" placeholder="Patient Name" onChange={this.handleChangeName}></input></div>
+                    <div><input type="number" placeholder="Phone Number" onChange={this.handleChangePhone}></input></div>
+                    <div><input className="submit-btn" type="submit" placeholder="Patient Name" onClick={this.handleSubmitAddPatient}></input></div>
+                </div>
                 {patients.map((patient)=>{
                     return(
                         <div className="container">
@@ -113,8 +150,8 @@ class Patient extends React.Component{
                                             <option data-key="4" value={patient._id}>Cured</option>
                                         </select>
                                     </div>
-                                    <div className="submit-btn">
-                                        <button onClick={this.handleSubmit}>Generate Report</button>
+                                    <div>
+                                        <button className="submit-btn" onClick={this.handleSubmit}>Generate Report</button>
                                     </div>
                                 </div>
                             </div>

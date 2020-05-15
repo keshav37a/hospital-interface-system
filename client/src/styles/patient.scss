@@ -6,6 +6,28 @@
     align-items: flex-start;
     margin: 1rem;
 
+    .submit-btn{                   
+        border: none;
+        padding: 0.5rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        background-color: #B3CDE0;
+    }
+
+    input{
+        border: none;
+        padding: 0.3rem;
+        margin-right: 1rem;
+        background-color: #B3CDE0;
+    }
+
+    .add-patient-container{
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        margin-bottom: 1rem;
+    }
+
     .header{
         font-weight: 600;
         margin-bottom: 1rem;
@@ -72,16 +94,7 @@
                         }
                     }
                 }
-                .submit-btn{
-                    button{
-                        border: none;
-                        padding: 0.5rem;
-                        padding-left: 1rem;
-                        padding-right: 1rem;
-                        background-color: #B3CDE0;
-                    }
-                }
-
+                
             }
             
         }
