@@ -1,6 +1,7 @@
 import React from 'react';
 import HospitalService from '../services/hospitalService';
 import '../styles/patient.scss'
+import moment from 'moment';
 
 class Patient extends React.Component{
     
@@ -91,7 +92,7 @@ class Patient extends React.Component{
                                         return(
                                             <div className="single-report-container">
                                                 <div>{report.status}</div>
-                                                <div>{report.createdAt}</div>
+                                                <div>{moment(report.createdAt).format('MMMM Do YYYY, h:mm:ss a')}</div>
                                             </div>
                                         )
                                     })}
