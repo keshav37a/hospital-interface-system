@@ -35,8 +35,8 @@ After the project has successfully run, In a web browser you can run the followi
   Pass the (doctor's)id and password values in the body and if validated then  this will return the jwt-token which can be used for further routes which require authorization.
 
 * Register Patient\
-  Post Request: `http://localhost:8000/api/v1/patients/register`\
-  Pass the (patient's)name and (patient's)phone in the body along with the jwt-token in the header and if validated then this will register the patient and return the registered patient details.
+  Post Request: `http://localhost:8000/api/v1/patients/:id/register`\
+  Pass the (patient's)name and (patient's)phone in the body along with the jwt-token in the header and the doctor's id in the url as params, if validated then this will register the patient and return the registered patient details.
 
 * Create Report\
   Post Request: `http://localhost:8000/api/v1/patients/:id/create_report`\

@@ -1,12 +1,13 @@
 import React from 'react';
 import '../styles/signIn.scss'
 import HospitalService from '../services/hospitalService';
+import { Redirect } from 'react-router';
 
 class SignIn extends React.Component{
 
     constructor(props) {
         super(props);
-        this.state = {doctor: '', password: ''};
+        this.state = {doctor: '', password: '', redirect: false};
 
         this.handleChangeDoctor = this.handleChangeDoctor.bind(this);
         this.handleChangePassword = this.handleChangePassword.bind(this);
@@ -14,6 +15,9 @@ class SignIn extends React.Component{
     }
     
     render(){
+        if(this.state.redirect) {
+            return <Redirect push to="/patients" />;
+        }
         return (
             <div className="forms-container flex row center">
                 <div className="sign-in-div">
@@ -45,10 +49,18 @@ class SignIn extends React.Component{
         this.setState({password: event.target.value});
         console.log(this.state);
     }
-    handleSubmit(event){
-        alert(`${this.state.doctor}  ${this.state.password}`);
-        HospitalService.doctorSignIn(this.state.doctor, this.state.password);
+    async handleSubmit(event){
         event.preventDefault();
+        alert(`${this.state.doctor}  ${this.state.password}`);
+        let signInData = await HospitalService.doctorSignIn(this.state.doctor, this.state.password);
+        console.log(signInData);
+        if(signInData['isSignedIn']===true){
+            this.setState({redirect: true});
+        }
+        else{
+            //Show incorrect password notification
+            console.log('Incorrect Id/Password');
+        }
     }
 }
 

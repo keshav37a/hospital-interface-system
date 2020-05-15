@@ -11,13 +11,19 @@ export default {
     const body={id: doctorId, password: password};
     let res = await axios.post('/api/v1/doctors/login', body);
     console.log(res);
+    const signInData = {};
     if(res.status==200){
       console.log('Successfully logged in');
       let token = res.data.data.token;
       console.log(token);
+      signInData['isSignedIn'] = true;
+      signInData['token'] = token;
     }
-    else
+    else{
+      signInData['isSignedIn'] = false;
       console.log('Invalid username password');
+    }
+    return signInData;
   }
 }
 

@@ -1,4 +1,5 @@
 const Doctor = require('../../../models/doctor');
+const Patient = require('../../../models/patient');
 const jwt = require('jsonwebtoken');
 const cryptoObj = require('../../../config/crypto-js');
 
@@ -102,7 +103,7 @@ module.exports.retieveAllPatients = async (req, res)=>{
     }
 
     try{
-        let doctor = await Doctor.findById(id);
+        let patients = await Patient.find({})
 
         if(doctor){
             let pass = req.body.password;

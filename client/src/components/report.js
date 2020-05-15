@@ -5,6 +5,7 @@ const report = (props)=>{
     return (
         <div>
             <div className="report">
+                <div>Patient</div>
                 <div>Patient's Name: {report.patient}</div>
                 <div>Doctor's Name: {report.patient}</div>
                 <div>Status: {report.status}</div>
