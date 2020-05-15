@@ -1,6 +1,7 @@
 import React from 'react';
 import '../styles/stats.scss';
 import HospitalService from '../services/hospitalService';
+import {Pie, Doughnut} from 'react-chartjs-2';
 
 class Stats extends React.Component{
 
@@ -10,7 +11,22 @@ class Stats extends React.Component{
     this.authToken = props.location.state.token;
     this.stats = [];
 
-    this.state = {doctor: this.doctor, authToken: this.authToken, stats: this.stats};
+    this.state = 
+    {
+                  doctor: this.doctor, 
+                  authToken: this.authToken, 
+                  stats: this.stats,
+                  labels: [],
+                  datasets: [
+                    {
+                      label: 'Corona Cases',
+                      backgroundColor: ['#B21F00', '#C9DE00', '#2FDE00', '#00A6B4'],
+                      hoverBackgroundColor: ['#501800', '#4B5000', '#175000', '#003350'],
+                      data: []
+                    }
+                  ]
+
+    };
 
     console.log(this.doctor);
     console.log(this.authToken);
@@ -23,8 +39,18 @@ class Stats extends React.Component{
   getStats = async()=>{
     console.log(this.doctor.doctor._id);
     let stats = await  HospitalService.getStats(this.doctor.doctor._id, this.state.authToken);
-    console.log(stats);
-    this.setState({stats: stats});
+    let labels = [];
+    let data = [];
+    stats.map((el)=>{
+        labels.push(el.status);
+        data.push(el.patients.length);
+    })
+
+    console.log(labels);
+    console.log(data);
+    let datasets = this.state.datasets;
+    datasets[0].data = data;
+    this.setState({stats: stats, labels: labels, datasets:datasets});
     console.log(this.state);
   }
 
@@ -35,6 +61,21 @@ class Stats extends React.Component{
     return(
       <div>
         <div>Stats Page</div>
+        <div>
+            <Pie data={this.state}
+                 options={{
+                    title:{
+                      display:true,
+                      text:'Corona Status',
+                      fontSize:20
+                    },
+                    legend:{
+                      display:true,
+                      position:'right'
+                    }
+                  }}
+            />
+        </div>
         {stats.map((stat)=>{
             return(
                 <div>
