@@ -50,6 +50,14 @@ After the project has successfully run, In a web browser you can run the followi
   Get Request: `http://localhost:8000/api/v1/reports/:status`\
   Pass the status in the url along with the jwt-token in the headers and if validated then this will retireve all the reports for all the patients for that specific status.
 
+* Get Doctor Info By Id\
+  Get Request: `http://localhost:8000/api/v1/doctors/:id`\
+  Pass the doctor id in the URL along with the jwt-token in the headers and if validated then this will retireve the doctor info.
+
+* Get All Patients by Doctor\
+  Get Request: `http://localhost:8000/api/v1/doctors/:id/all_patients`\
+  Pass the doctor id in the URL along with the jwt-token in the headers and if validated then this will retireve all the patients of that doctor.
+
 ## Unit Tests
 
 Tests for 5 routes have been written

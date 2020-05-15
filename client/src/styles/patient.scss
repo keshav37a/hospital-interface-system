@@ -1,0 +1,38 @@
+.patients-container{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 1rem;
+    background-color: #B3CDE0;
+
+    .single-patient-container{
+        margin: 1rem;
+        padding: 1rem;
+        background-color: #6497B1;
+        border: 1px solid black;
+        width: 95%;
+
+        .labels-container{
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+
+            .labels{
+                margin-right: 1rem;
+            }
+
+        }
+
+        .reports-container{
+            display: flex;
+            flex-direction: row;
+            justify-content: start;
+            .single-report-container{
+                margin-top: 1rem;
+                margin-right: 2rem;
+            }
+        }
+
+    }
+
+}

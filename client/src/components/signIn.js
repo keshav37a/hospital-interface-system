@@ -7,7 +7,7 @@ class SignIn extends React.Component{
 
     constructor(props) {
         super(props);
-        this.state = {doctor: '', password: '', redirect: false};
+        this.state = {doctor: '', password: '', redirect: false, signInData: {}};
 
         this.handleChangeDoctor = this.handleChangeDoctor.bind(this);
         this.handleChangePassword = this.handleChangePassword.bind(this);
@@ -16,7 +16,12 @@ class SignIn extends React.Component{
     
     render(){
         if(this.state.redirect) {
-            return <Redirect push to="/patients" />;
+            // return <Redirect push to="/patients"/>;
+            return <Redirect to={{
+                pathname: '/patients',
+                state: { id: this.state.doctor, signInData: this.state.signInData}
+            }}
+    />
         }
         return (
             <div className="forms-container flex row center">
@@ -43,19 +48,19 @@ class SignIn extends React.Component{
 
     handleChangeDoctor(event){
         this.setState({doctor: event.target.value});
-        console.log(this.state);
+        // console.log(this.state);
     }
     handleChangePassword(event){
         this.setState({password: event.target.value});
-        console.log(this.state);
+        // console.log(this.state);
     }
     async handleSubmit(event){
         event.preventDefault();
-        alert(`${this.state.doctor}  ${this.state.password}`);
+        // alert(`${this.state.doctor}  ${this.state.password}`);
         let signInData = await HospitalService.doctorSignIn(this.state.doctor, this.state.password);
-        console.log(signInData);
+        // console.log(signInData);
         if(signInData['isSignedIn']===true){
-            this.setState({redirect: true});
+            this.setState({redirect: true, signInData: signInData});
         }
         else{
             //Show incorrect password notification

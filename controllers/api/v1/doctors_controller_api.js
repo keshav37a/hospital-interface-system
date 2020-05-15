@@ -93,35 +93,54 @@ module.exports.login = async function(req, res){
     }
 }
 
-module.exports.retieveAllPatients = async (req, res)=>{
-    let id = req.params.id;
-    console.log('req.body:', req.body);
-    if(req.body.id==undefined){
-        return res.status(405).json({
-            message: 'Unauthorized'
+module.exports.getAllPatients = async (req, res)=>{
+    try{
+        let doctorId = req.params.id;
+        if(doctorId==undefined){
+            return res.status(405).json({
+                message: 'Unauthorized'
+            });
+        }
+        let patients = await Patient.find({doctor: doctorId}).populate('reports').populate('doctor');
+        return res.status(200).json({
+            data:{
+                patients:patients
+            },
+            message: 'Successful'
+        });                
+    }
+    catch(err){
+        console.log(err);
+        return res.status(500).json({
+            message: `${err}`
         });
     }
+}
 
+module.exports.getDoctorInfo = async (req, res)=>{
     try{
-        let patients = await Patient.find({})
-
-        if(doctor){
-            let pass = req.body.password;
-            let pwdFromDb = doctor.password;
-            pwdFromDb = cryptoObj.decrypt(pwdFromDb);
-
-            if(pass==pwdFromDb){
-                return res.status(200).json({
-                    data:{
-                        token: jwt.sign(doctor.toJSON(), 'judgement-day', {expiresIn: 1000000})
-                    },
-                    message:'Here is your doctor token. Please keep it safe'
-                })
-            }
+        let doctorId = req.params.id;
+        console.log('doctorId', doctorId);
+        if(doctorId==undefined){
+            return res.status(405).json({
+                message: 'Unauthorized'
+            });
         }
-        return res.status(401).json({
-            message:'Invalid Credentials'
-        });
+        let doctor = await (await Doctor.findById(doctorId)).toObject();
+
+        if(!doctor){
+            return res.status(404).json({
+                message: 'Doctor Not Found'
+            });     
+        }           
+
+        delete doctor['password'];
+        return res.status(200).json({
+            data:{
+                doctor:doctor
+            },
+            message: 'Successful'
+        });                
     }
     catch(err){
         console.log(err);

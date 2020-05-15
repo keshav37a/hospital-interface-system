@@ -4,5 +4,7 @@ const doctorsController = require('../../../controllers/api/v1/doctors_controlle
 
 router.post('/register', doctorsController.register);
 router.post('/login', doctorsController.login);
+router.get('/:id/all_patients', doctorsController.getAllPatients);
+router.get('/:id', doctorsController.getDoctorInfo);
 
 module.exports = router;
