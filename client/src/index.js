@@ -6,22 +6,29 @@ import Patient from './components/Patient';
 import Stats from './components/Stats';
 import SignUp from './components/SignUp';
 import NotFound from './components/NotFound';
-import { Route, Link, BrowserRouter as Router } from 'react-router-dom';
+// import { Route, Link, BrowserRouter as Router } from 'react-router-dom';
+import { Router, Switch, Route } from "react-router-dom";
+import history from './services/historyService';
 
 const routing = (
   <div>
-    <Router>
+    <Router history={history}>
+      <Switch>
         <Route exact path="/" component={SignIn} />
         <Route path="/patients" component={Patient} />
         <Route path="/stats" component={Stats} />
         <Route path="/sign-up" component={SignUp} />
+      </Switch>
     </Router>
   </div>
 )
 
 ReactDOM.render(
-  <React.StrictMode>
-    {routing}
-  </React.StrictMode>,
+  // <ToastProvider>
+    <React.StrictMode>
+      {routing}
+    </React.StrictMode>
+  // </ToastProvider>
+  ,
   document.getElementById('root')
 );

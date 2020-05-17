@@ -48,14 +48,14 @@ class SignUp extends React.Component{
             console.log('passwords dont match');
         }
         else{
-            HospitalService.addDoctor(this.state.doctorName, this.state.doctorPhone, this.state.password);
+            let res = HospitalService.addDoctor(this.state.doctorName, this.state.doctorPhone, this.state.password);
+
         }
     }
 
     handleRedirectSignIn(){
         console.log('handle sign in redirect');
         console.log(this.state);
-        this.setState({repeatPassword: "none"});
         this.setState({redirect: true, path: '/'});
     }
 
