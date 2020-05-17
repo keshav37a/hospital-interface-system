@@ -20,9 +20,8 @@ body{
       .input-initial{
           width: 80%;
           border: 1px solid #e5e5e5;
-          margin-left: 4rem;
-          margin-right: 4rem;
-          margin-top: 1rem;
+          margin: 1rem 4rem 1rem 4rem;
+          padding: 1rem;
       }
   
       .btn-sign-up{
@@ -30,7 +29,9 @@ body{
           color: #FFFFFF;
           margin-top: 2rem;
           margin-bottom: 2rem;
+          padding: 1rem;
           border: none;
+          width: 90%;
       }
     }
   
@@ -47,6 +48,7 @@ body{
         text-decoration: none;
         color: #567FF3;
         font-weight: 600;
+        cursor: pointer;
     }
   
   }

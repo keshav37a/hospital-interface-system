@@ -47,6 +47,12 @@ export default {
     console.log(res);
   },
 
+  addDoctor: async(doctorName, doctorPhone, doctorPassword) =>{
+    let body = {name: doctorName, phone: doctorPhone, password: doctorPassword};
+    let res = await axios.post('/api/v1/doctors/register', body);
+    console.log(res);
+  },
+
   getStats: async(doctorId, authToken)=>{
     let tokenStr = 'Bearer ' + authToken;
     let res = await axios.get(`/api/v1/doctors/${doctorId}/all_stats`, {headers: {'Authorization': tokenStr}});

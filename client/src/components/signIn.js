@@ -7,17 +7,19 @@ class SignIn extends React.Component{
 
     constructor(props) {
         super(props);
-        this.state = {doctor: '', password: '', redirect: false, signInData: {}};
+        this.state = {doctor: '', password: '', redirect: false, path: '', signInData: {}};
 
         this.handleChangeDoctor = this.handleChangeDoctor.bind(this);
         this.handleChangePassword = this.handleChangePassword.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleRedirectSignUp = this.handleRedirectSignUp.bind(this);
+        
     }
     
     render(){
         if(this.state.redirect) {
             return <Redirect to={{
-                pathname: '/patients',
+                pathname: this.state.path,
                 state: { id: this.state.doctor, signInData: this.state.signInData}
             }}/>
         }
@@ -36,7 +38,7 @@ class SignIn extends React.Component{
                         <button className="btn-sign-in mar1 width90 pad1" type="submit" onClick={this.handleSubmit}>Sign In</button>
                         <div className="flex row start mb1">
                             <div className="link-desc">New To Our Website?</div>
-                            <a className="link-appearance">Sign Up</a>
+                            <a className="link-appearance" onClick={this.handleRedirectSignUp}>Sign Up</a>
                         </div>
                     </form>
                 </div>
@@ -56,12 +58,16 @@ class SignIn extends React.Component{
         event.preventDefault();
         let signInData = await HospitalService.doctorSignIn(this.state.doctor, this.state.password);
         if(signInData['isSignedIn']===true){
-            this.setState({redirect: true, signInData: signInData});
+            this.setState({redirect: true, signInData: signInData, path:'/patients'});
         }
         else{
             //Show incorrect password notification
             console.log('Incorrect Id/Password');
         }
+    }
+
+    handleRedirectSignUp(){
+        this.setState({redirect: true, path: '/sign-up'});
     }
 }
 
