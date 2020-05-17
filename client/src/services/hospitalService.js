@@ -13,25 +13,35 @@ export default {
   },
 
   doctorSignIn: async (doctorId, password) =>{
-    const body={id: doctorId, password: password};
-    let res = await axios.post('/api/v1/doctors/login', body);
-    const signInData = {};
-    if(res.status==200){
-      console.log('Successfully logged in');
-      let resDoctor = await axios.get(`/api/v1/doctors/${doctorId}`);
-      let doctor = resDoctor.data.data;
-      console.log(doctor);
-      let token = res.data.data.token;
-      console.log(token);
-      signInData['isSignedIn'] = true;
-      signInData['token'] = token;
-      signInData['doctor'] = doctor;
+    try{
+      const signInData = {};
+      const body={id: doctorId, password: password};
+      let res = await axios.post('/api/v1/doctors/login', body);
+  
+      if(res.status==200){
+        console.log('Successfully logged in');
+        let resDoctor = await axios.get(`/api/v1/doctors/${doctorId}`);
+        let doctor = resDoctor.data.data;
+        console.log(doctor);
+        let token = res.data.data.token;
+        console.log(token);
+        signInData['isSignedIn'] = true;
+        signInData['token'] = token;
+        signInData['doctor'] = doctor;
+      }
+      else{
+        signInData['isSignedIn'] = false;
+        console.log('Invalid username password');
+      }
+      return signInData;
     }
-    else{
+    catch(err){
+      const signInData = {};
       signInData['isSignedIn'] = false;
       console.log('Invalid username password');
+      return signInData;
     }
-    return signInData;
+    
   },
 
   addReport: async (doctorId, status, authToken, patientId)=>{
@@ -50,6 +60,7 @@ export default {
   addDoctor: async(doctorName, doctorPhone, doctorPassword) =>{
     let body = {name: doctorName, phone: doctorPhone, password: doctorPassword};
     let res = await axios.post('/api/v1/doctors/register', body);
+    
     console.log(res);
   },
 

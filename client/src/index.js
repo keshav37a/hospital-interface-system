@@ -6,7 +6,7 @@ import Patient from './components/Patient';
 import Stats from './components/Stats';
 import SignUp from './components/SignUp';
 import NotFound from './components/NotFound';
-// import { Route, Link, BrowserRouter as Router } from 'react-router-dom';
+import { ToastProvider, useToasts } from 'react-toast-notifications'
 import { Router, Switch, Route } from "react-router-dom";
 import history from './services/historyService';
 
@@ -24,11 +24,11 @@ const routing = (
 )
 
 ReactDOM.render(
-  // <ToastProvider>
+  <ToastProvider>
     <React.StrictMode>
       {routing}
     </React.StrictMode>
-  // </ToastProvider>
+   </ToastProvider>
   ,
   document.getElementById('root')
 );

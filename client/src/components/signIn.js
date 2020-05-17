@@ -2,19 +2,19 @@ import React, { useState } from 'react';
 import '../styles/signIn.scss'
 import HospitalService from '../services/hospitalService';
 import { Redirect } from 'react-router';
-import { ToastProvider, useToasts } from 'react-toast-notifications';
+import { useToasts } from 'react-toast-notifications';
 import history from '../services/historyService';
 
 const SignIn = function(){
 
     const [doctor, setDoctor] = useState(''); 
     const [password, setPassword] = useState(''); 
-    const [path, setPath] = useState('');
     const [redirect, setRedirect] = useState(false);
     const [signInData, setSignInData] = useState({});
 
+    const { addToast } = useToasts();
+
     const handleChangeDoctor = (event)=>{
-        // this.setState({doctor: event.target.value});
         setDoctor(event.target.value);
         printState();
     }
@@ -25,7 +25,7 @@ const SignIn = function(){
     }
 
     const printState = ()=>{
-        let st = {doctor: doctor, password: password, path: path, redirect: redirect, signInData: signInData};
+        let st = {doctor: doctor, password: password, redirect: redirect, signInData: signInData};
         console.log(st);
     }
 
@@ -34,20 +34,19 @@ const SignIn = function(){
         let signInData = await HospitalService.doctorSignIn(doctor, password);
         console.log(signInData);
         if(signInData['isSignedIn']===true){
-            setRedirect(true);
             setSignInData(signInData);
-            setPath('/patients');
-            history.push(path, {id:doctor, signInData: signInData});
+            history.push('/patients', {id:doctor, signInData: signInData});
+            addToast('Successfully Logged In', { appearance: 'success', autoDismiss:true,  autoDismissTimeout: 3000});
         }
         else{
-            //Show incorrect password notification
+            addToast('Invalid id or password', { appearance: 'error', autoDismiss:true,  autoDismissTimeout: 3000});
             console.log('Incorrect Id/Password');
         }
     }
 
     const handleRedirectSignUp = ()=>{
         // addToast('Saved Successfully', { appearance: 'success' });
-        this.setState({redirect: true, path: '/sign-up'});
+        history.push('/sign-up');
     }
 
     return (
