@@ -9,7 +9,6 @@ const SignIn = function(){
 
     const [doctor, setDoctor] = useState(''); 
     const [password, setPassword] = useState(''); 
-    const [redirect, setRedirect] = useState(false);
     const [signInData, setSignInData] = useState({});
 
     const { addToast } = useToasts();
@@ -25,7 +24,7 @@ const SignIn = function(){
     }
 
     const printState = ()=>{
-        let st = {doctor: doctor, password: password, redirect: redirect, signInData: signInData};
+        let st = {doctor: doctor, password: password, signInData: signInData};
         console.log(st);
     }
 
