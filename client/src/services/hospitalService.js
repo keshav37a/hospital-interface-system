@@ -45,9 +45,17 @@ export default {
   },
 
   addReport: async (doctorId, status, authToken, patientId)=>{
-    let body = {doctor:doctorId, status: status};
-    let tokenStr = 'Bearer ' + authToken;
-    let res = await axios.post(`/api/v1/patients/${patientId}/create_report`, body, {headers: {'Authorization': tokenStr}});
+    try{
+      let body = {doctor:doctorId, status: status};
+      let tokenStr = 'Bearer ' + authToken;
+      let res = await axios.post(`/api/v1/patients/${patientId}/create_report`, body, {headers: {'Authorization': tokenStr}});
+      return res.status;
+    }
+    catch(err){
+      console.log(err);
+      return 500;
+    }
+    
   },
 
   addPatient: async(doctorId, patientName, patientPhone, authToken)=>{
@@ -55,13 +63,19 @@ export default {
     let tokenStr = 'Bearer ' + authToken;
     let res = await axios.post(`/api/v1/patients/${doctorId}/register`, body, {headers: {'Authorization': tokenStr}});
     console.log(res);
+    return res.status;
   },
 
   addDoctor: async(doctorName, doctorPhone, doctorPassword) =>{
-    let body = {name: doctorName, phone: doctorPhone, password: doctorPassword};
-    let res = await axios.post('/api/v1/doctors/register', body);
+    try{
+      let body = {name: doctorName, phone: doctorPhone, password: doctorPassword};
+      let res = await axios.post('/api/v1/doctors/register', body);
+      return res.status;
+    }
+    catch(err){
+      return 500;
+    }
     
-    console.log(res);
   },
 
   getStats: async(doctorId, authToken)=>{

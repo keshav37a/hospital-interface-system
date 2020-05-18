@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import '../styles/signIn.scss'
 import HospitalService from '../services/hospitalService';
-import { Redirect } from 'react-router';
 import { useToasts } from 'react-toast-notifications';
 import history from '../services/historyService';
 
@@ -15,17 +14,10 @@ const SignIn = function(){
 
     const handleChangeDoctor = (event)=>{
         setDoctor(event.target.value);
-        printState();
     }
 
     const handleChangePassword = (event)=>{
         setPassword(event.target.value);
-        printState();
-    }
-
-    const printState = ()=>{
-        let st = {doctor: doctor, password: password, signInData: signInData};
-        console.log(st);
     }
 
     const handleSubmit = async (event)=>{
@@ -35,17 +27,22 @@ const SignIn = function(){
         if(signInData['isSignedIn']===true){
             setSignInData(signInData);
             history.push('/patients', {id:doctor, signInData: signInData});
-            addToast('Successfully Logged In', { appearance: 'success', autoDismiss:true,  autoDismissTimeout: 3000});
+            showNotifs(200, 'Successfully Logged In');
         }
         else{
-            addToast('Invalid id or password', { appearance: 'error', autoDismiss:true,  autoDismissTimeout: 3000});
-            console.log('Incorrect Id/Password');
+            showNotifs(405, 'Incorrect Id/Password');
         }
     }
 
     const handleRedirectSignUp = ()=>{
-        // addToast('Saved Successfully', { appearance: 'success' });
         history.push('/sign-up');
+    }
+
+    const showNotifs = (reqStatus, message) =>{
+        if(reqStatus==200)
+            addToast(message, { appearance: 'success', autoDismiss:true,  autoDismissTimeout: 3000});
+        else
+            addToast('Internal Server Error', { appearance: 'error', autoDismiss:true,  autoDismissTimeout: 3000});
     }
 
     return (

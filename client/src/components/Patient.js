@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import HospitalService from '../services/hospitalService';
 import '../styles/patient.scss'
-import { Redirect } from 'react-router';
 import history from '../services/historyService';
+import { useToasts } from 'react-toast-notifications';
 import moment from 'moment';
 
 const Patient = (props)=>{
@@ -18,9 +18,7 @@ const Patient = (props)=>{
     const [newPatientPhone, setNewPatientPhone] = useState('');
     const [changeVar, setChangeVar] = useState(0);
 
-    const [password, setPassword] = useState(''); 
-    const [redirect, setRedirect] = useState(false);
-    const [signInData, setSignInData] = useState({});
+    const { addToast } = useToasts();
 
     useEffect(()=>{
         getPatientsList();
@@ -43,16 +41,15 @@ const Patient = (props)=>{
 
     const handleSubmit = async (event) =>  {
         event.preventDefault();
-        await HospitalService.addReport(doctorId, 
-                                        status, 
-                                        authToken, 
-                                        patientId);
+        let reqStatus = await HospitalService.addReport(doctorId, status, authToken, patientId);
+        showNotifs(reqStatus, 'Report Added');
         setChangeVar(changeVar+1);
     }
 
     const handleSubmitAddPatient = async(event)=>{
         event.preventDefault();
-        let res = await HospitalService.addPatient(doctorId, newPatientName, newPatientPhone, authToken);
+        let reqStatus = await HospitalService.addPatient(doctorId, newPatientName, newPatientPhone, authToken);
+        showNotifs(reqStatus, 'Patient Added');
         setChangeVar(changeVar+1);
     }
 
@@ -68,7 +65,14 @@ const Patient = (props)=>{
         history.push('/stats', { doctor: doctor, token: authToken});
     }
 
+    const showNotifs = (reqStatus, message) =>{
 
+        if(reqStatus==200)
+            addToast(message, { appearance: 'success', autoDismiss:true,  autoDismissTimeout: 3000});
+        else
+            addToast('Internal Server Error', { appearance: 'error', autoDismiss:true,  autoDismissTimeout: 3000});
+    }
+    
     return(
         <div className="patients-container">
             <div className="stats" onClick={handleNavigateStats}>Stats</div>
