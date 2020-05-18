@@ -1,44 +1,36 @@
-import React from 'react';
 import '../styles/stats.scss';
+import React, { useState, useEffect } from 'react';
 import HospitalService from '../services/hospitalService';
 import {Pie} from 'react-chartjs-2';
 
-class Stats extends React.Component{
-
-  constructor(props){
-    super(props);
-    this.doctor = props.location.state.doctor;
-    this.authToken = props.location.state.token;
-    this.stats = [];
-
-    this.state = 
-    {
-                  doctor: this.doctor, 
-                  authToken: this.authToken, 
-                  stats: this.stats,
-                  labels: [],
-                  datasets: [
-                    {
-                      label: 'Corona Cases',
-                      backgroundColor: ['#B21F00', '#C9DE00', '#2FDE00', '#00A6B4'],
-                      hoverBackgroundColor: ['#501800', '#4B5000', '#175000', '#003350'],
-                      data: []
-                    }
-                  ]
-
-    };
-
-    console.log(this.doctor);
-    console.log(this.authToken);
+const Stats = (props)=>{
+  const doctor = props.location.state.doctor;
+  const authToken = props.location.state.token;
+  const [stats, setStats] = useState([]);
+  const [changeVar, setChangeVar] = useState(0);
+  
+  const chartData = {
+    labels: [],
+    datasets : [
+      {
+        label: 'Corona Statistics',
+        backgroundColor: [
+          '#B21F00',
+          '#6800B4',
+          '#2FDE00'
+        ],
+        hoverBackgroundColor: [
+        '#501800',
+        '#35014F',
+        '#175000',
+        ],
+        data: []
+      }
+    ]
   }
 
-  componentDidMount(){
-      this.getStats();
-  }
-
-  getStats = async()=>{
-    let stats = await  HospitalService.getStats(this.doctor.doctor._id, this.state.authToken);
-
+  const getStats = async()=>{
+    let stats = await  HospitalService.getStats(doctor.doctor._id, authToken);
     let labels = [];
     let data = [];
 
@@ -46,67 +38,69 @@ class Stats extends React.Component{
         labels.push(el.status);
         data.push(el.patients.length);
     })
-
-    let datasets = this.state.datasets;
-    datasets[0].data = data;
-    this.setState({stats: stats, labels: labels, datasets:datasets});
+    chartData.datasets[0].data = data;
+    chartData.labels = labels;
+    setStats(stats);
+    console.log(stats);
   }
 
-  render(){
-    let stats = this.state.stats;
-    return(
+  useEffect(()=>{
+    getStats();
+  },[changeVar]);
+  
+  return(
+    <div>
+      <div>Stats Page</div>
       <div>
-        <div>Stats Page</div>
-        <div>
-            <Pie data={this.state}
-                 options={{
-                    title:{
-                      display:true,
-                      text:'Corona Status',
-                      fontSize:20
-                    },
-                    legend:{
-                      display:true,
-                      position:'right'
-                    }
-                  }}
-            />
-        </div>
-        {stats.map((stat)=>{
-            return(
-                <div>
-                    <div className="header-stats">{stat.status}</div>
-                    <div className="body">
-                        {stat.patients.map((patient)=>{
-                            return(
-                                <div className="container">
-                                    <div className="single-patient-container">
-                                        <div className="labels-container-stats">
-                                            <div className="labels">
-                                                <div>Patient's Name:</div>
-                                                <div>Patient's Id:</div>
-                                                <div>Phone: </div>
-                                                <div>Check Up Date: </div>
-                                            </div>
-                                            <div className="labels">
-                                                <div>{patient.name}</div>
-                                                <div>{patient._id}</div>
-                                                <div>{patient.phone}</div>
-                                                <div>{patient.createdAt}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            )
-                        })}
-                    </div>
-                </div>
-            )
-        })}
+          <Pie data={chartData}
+               options={{
+                  title:{
+                    display:true,
+                    text:'Corona Status',
+                    fontSize:20
+                  },
+                  legend:{
+                    display:true,
+                    position:'right'
+                  },
+                  responsive:true,
+                  maintainAspectRatio: true
+                }}
+          />
       </div>
-    )
-  }
-
+      {stats.map((stat)=>{
+          return(
+              <div>
+                  <div className="header-stats">{stat.status}</div>
+                  <div className="body">
+                      {stat.patients.map((patient)=>{
+                          return(
+                              <div className="container">
+                                  <div className="single-patient-container">
+                                      <div className="labels-container-stats">
+                                          <div className="labels">
+                                              <div>Patient's Name:</div>
+                                              <div>Patient's Id:</div>
+                                              <div>Phone: </div>
+                                              <div>Check Up Date: </div>
+                                          </div>
+                                          <div className="labels">
+                                              <div>{patient.name}</div>
+                                              <div>{patient._id}</div>
+                                              <div>{patient.phone}</div>
+                                              <div>{patient.createdAt}</div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          )
+                      })}
+                  </div>
+              </div>
+          )
+      })}
+    </div>
+  )
 }
 
 export default Stats;
