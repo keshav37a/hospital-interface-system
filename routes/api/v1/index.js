@@ -5,7 +5,6 @@ const passport = require('passport');
 
 router.use('/doctors', require('./doctors'));
 router.use('/patients', require('./patients'));
-// router.get('/reports/:status', passport.authenticate('jwt', {session:false}),  patientsController.getReportsByStatus);
-router.get('/reports/:status', patientsController.getReportsByStatus);
+router.get('/reports/:status', passport.authenticate('jwt', {session:false}), patientsController.getReportsByStatus);
 
 module.exports = router;

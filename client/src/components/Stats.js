@@ -1,11 +1,25 @@
 import '../styles/stats.scss';
 import React, { useState, useEffect } from 'react';
 import HospitalService from '../services/hospitalService';
+import history from '../services/historyService';
 import {Pie} from 'react-chartjs-2';
+import moment from 'moment';
 
 const Stats = (props)=>{
-  const doctor = props.location.state.doctor;
-  const authToken = props.location.state.token;
+
+  let doctor = {};
+  let authToken = '';
+  let doctorId = '';
+
+  if(props.location.state===undefined){
+    history.push('/unauthorized');
+  }
+  else{
+    doctor = props.location.state.doctor;
+    authToken = props.location.state.token;
+    doctorId = doctor.doctor._id;
+  }
+
   const [stats, setStats] = useState([]);
   const [changeVar, setChangeVar] = useState(0);
   
@@ -30,7 +44,7 @@ const Stats = (props)=>{
   }
 
   const getStats = async()=>{
-    let stats = await  HospitalService.getStats(doctor.doctor._id, authToken);
+    let stats = await HospitalService.getStats(doctorId, authToken);
     let labels = [];
     let data = [];
 
@@ -88,7 +102,7 @@ const Stats = (props)=>{
                                               <div>{patient.name}</div>
                                               <div>{patient._id}</div>
                                               <div>{patient.phone}</div>
-                                              <div>{patient.createdAt}</div>
+                                              <div>{moment(patient.createdAt).format('MMMM Do YYYY, h:mm:a')}</div>
                                           </div>
                                       </div>
                                   </div>

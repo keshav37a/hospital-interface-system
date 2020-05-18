@@ -1,15 +1,29 @@
 import axios from 'axios';
 
 export default {
-  getAllReportsOfPatient: async () => {
-    let res = await axios.get(`/api/v1/patients/5ebd4f9b15607a5388fb4643/all_reports`);
-    return res.data || [];
+  getAllReportsOfPatient: async (authToken) => {
+    try{
+      let tokenStr = "Bearer " + authToken;
+      let res = await axios.get(`/api/v1/patients/5ebd4f9b15607a5388fb4643/all_reports`, {headers:{Authorization: tokenStr}});
+      return res.data || [];
+    }
+    catch(err){
+      console.log(err);
+      return 500;
+    }
   },
 
   getAllPatientsOfADoctor: async (doctorId, authToken) =>{
-    let res = await axios.get(`/api/v1/doctors/${doctorId}/all_patients`, {Headers: {Authorization: `Bearer ${authToken}`} });
-    let patients = res.data.data.patients;
-    return patients;
+    try{
+      let res = await axios.get(`/api/v1/doctors/${doctorId}/all_patients`, {headers: {Authorization: `Bearer ${authToken}`} });
+      let patients = res.data.data.patients;
+      return patients;
+    }
+    catch(err){
+      console.log(err);
+      return [];
+    }
+    
   },
 
   doctorSignIn: async (doctorId, password) =>{
@@ -20,7 +34,11 @@ export default {
   
       if(res.status==200){
         console.log('Successfully logged in');
-        let resDoctor = await axios.get(`/api/v1/doctors/${doctorId}`);
+        let authToken = res.data.data.token
+        let tokenStr = 'Bearer ' + authToken;
+        console.log(doctorId);
+        let resDoctor = await axios.get(`/api/v1/doctors/${doctorId}`, {headers: {Authorization: tokenStr}});
+        console.log(resDoctor);
         let doctor = resDoctor.data.data;
         console.log(doctor);
         let token = res.data.data.token;
@@ -36,12 +54,11 @@ export default {
       return signInData;
     }
     catch(err){
+      console.log(err);
       const signInData = {};
       signInData['isSignedIn'] = false;
-      console.log('Invalid username password');
       return signInData;
     }
-    
   },
 
   addReport: async (doctorId, status, authToken, patientId)=>{
@@ -75,12 +92,17 @@ export default {
     catch(err){
       return 500;
     }
-    
   },
 
   getStats: async(doctorId, authToken)=>{
-    let tokenStr = 'Bearer ' + authToken;
-    let res = await axios.get(`/api/v1/doctors/${doctorId}/all_stats`, {headers: {'Authorization': tokenStr}});
-    return res.data.data.stats;
+    try{
+      let tokenStr = 'Bearer ' + authToken;
+      let res = await axios.get(`/api/v1/doctors/${doctorId}/all_stats`, {headers: {'Authorization': tokenStr}});
+      return res.data.data.stats;
+    }
+    catch(err){
+      console.log(err);
+      return [];
+    }
   }
 }

@@ -6,19 +6,38 @@ import { useToasts } from 'react-toast-notifications';
 import moment from 'moment';
 
 const Patient = (props)=>{
-    let doctorId = props.location.state.id;
-    let authToken = props.location.state.signInData.token;
-    let isSignedIn = props.location.state.signInData.isSignedIn;
-    let doctor = props.location.state.signInData.doctor;
 
+    let doctorId = '';
+    let authToken = '';
+    let isSignedIn = '';
+    let doctor = {};
+
+    const { addToast } = useToasts();
+
+    const showNotifs = (reqStatus, message) =>{
+        if(reqStatus==200)
+            addToast(message, { appearance: 'success', autoDismiss:true,  autoDismissTimeout: 3000});
+        else
+            addToast('Internal Server Error', { appearance: 'error', autoDismiss:true,  autoDismissTimeout: 3000});
+    }
+
+    if(props.location.state===undefined){
+        history.push('/unauthorized');
+    }
+
+    else{
+        doctorId = props.location.state.id;
+        authToken = props.location.state.signInData.token;
+        isSignedIn = props.location.state.signInData.isSignedIn;
+        doctor = props.location.state.signInData.doctor;
+    }
+    
     const [patients, setPatients] = useState([]); 
     const [status, setStatus] = useState(0);
     const [patientId, setPatientId] = useState('');
     const [newPatientName, setNewPatientName] = useState('');
     const [newPatientPhone, setNewPatientPhone] = useState('');
     const [changeVar, setChangeVar] = useState(0);
-
-    const { addToast } = useToasts();
 
     useEffect(()=>{
         getPatientsList();
@@ -63,14 +82,6 @@ const Patient = (props)=>{
 
     const handleNavigateStats = (event)=>{
         history.push('/stats', { doctor: doctor, token: authToken});
-    }
-
-    const showNotifs = (reqStatus, message) =>{
-
-        if(reqStatus==200)
-            addToast(message, { appearance: 'success', autoDismiss:true,  autoDismissTimeout: 3000});
-        else
-            addToast('Internal Server Error', { appearance: 'error', autoDismiss:true,  autoDismissTimeout: 3000});
     }
     
     return(

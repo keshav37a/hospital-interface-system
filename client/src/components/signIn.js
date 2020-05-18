@@ -21,17 +21,24 @@ const SignIn = function(){
     }
 
     const handleSubmit = async (event)=>{
-        event.preventDefault();
-        let signInData = await HospitalService.doctorSignIn(doctor, password);
-        console.log(signInData);
-        if(signInData['isSignedIn']===true){
-            setSignInData(signInData);
-            history.push('/patients', {id:doctor, signInData: signInData});
-            showNotifs(200, 'Successfully Logged In');
+        try{
+            event.preventDefault();
+            let signInData = await HospitalService.doctorSignIn(doctor, password);
+            console.log(signInData);
+            if(signInData['isSignedIn']===true){
+                setSignInData(signInData);
+                history.push('/patients', {id:doctor, signInData: signInData});
+                showNotifs(200, 'Successfully Logged In');
+            }
+            else{
+                showNotifs(405, 'Incorrect Id/Password');
+            }
         }
-        else{
-            showNotifs(405, 'Incorrect Id/Password');
+        catch(err){
+            console.log(err);
+            showNotifs(500, 'Internal Server Error');
         }
+        
     }
 
     const handleRedirectSignUp = ()=>{
