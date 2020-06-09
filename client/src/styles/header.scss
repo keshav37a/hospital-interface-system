@@ -1,0 +1,45 @@
+body{
+    margin: 0;
+}
+#header-container{
+    background-color: #0680FD;
+    padding: 0.5rem;    
+}
+
+#site-heading{
+    font-family: sans-serif;
+    font-weight: 600;
+    color: #FFFFFF;
+    font-size: 1.5rem;
+}
+
+.links-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+
+    div{
+        margin-left: 1rem;
+        a{
+            color: #FFFFFF;
+            font-weight: 300;
+            text-decoration: none;
+        }
+    }
+}    
+
+
+
+.flex{
+    display: flex;
+} 
+.row{
+    flex-direction: row;
+} 
+.start{
+    justify-content: start;
+}
+
+.grow{
+    flex-grow: 1;
+}
